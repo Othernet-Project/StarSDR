@@ -36,14 +36,9 @@ typedef enum
     starsdr_caps_agc
 } starsdr_caps;
 
-typedef struct starsdr_iq_t
-{
-    starsdr_int16 i;
-    starsdr_int16 q;
-} starsdr_iq;
 
-typedef starsdr_int32 (*starsdr_rx_async_callback)(void *context, starsdr_iq *samples, starsdr_uint32 length);
-typedef starsdr_int32 (*starsdr_tx_async_callback)(void *context, starsdr_iq *samples, starsdr_uint32 length);
+typedef starsdr_int32 (*starsdr_rx_async_callback)(void *context, starsdr_int16 *samples, starsdr_uint32 length);
+typedef starsdr_int32 (*starsdr_tx_async_callback)(void *context, starsdr_int16 *samples, starsdr_uint32 length);
 
 
 
@@ -69,7 +64,7 @@ typedef starsdr_int32 (*starsdr_set_rx_frequency_t)(starsdr_device *dev, starsdr
 typedef starsdr_int32 (*starsdr_set_tx_samplerate_t)(starsdr_device *dev, starsdr_uint64 sample_rate);
 typedef starsdr_int32 (*starsdr_set_tx_frequency_t)(starsdr_device *dev, starsdr_uint64 frequency);
 
-typedef starsdr_int32 (*starsdr_start_rx_t)(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_size);
+typedef starsdr_int32 (*starsdr_start_rx_t)(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_num_samples);
 typedef starsdr_int32 (*starsdr_stop_rx_t)(starsdr_device *dev);
 
 typedef starsdr_int32 (*starsdr_start_tx_t)(starsdr_device *dev, starsdr_tx_async_callback callback, void *context);
@@ -119,7 +114,7 @@ extern "C" {
     STARSDREXPORT starsdr_int32 starsdr_set_tx_samplerate(starsdr_device *dev, starsdr_uint64 sample_rate);
     STARSDREXPORT starsdr_int32 starsdr_set_tx_frequency(starsdr_device *dev, starsdr_uint64 frequency);
 
-    STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_size);
+    STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_num_samples);
     STARSDREXPORT starsdr_int32 starsdr_stop_rx(starsdr_device *dev);
 
     STARSDREXPORT starsdr_int32 starsdr_start_tx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context);

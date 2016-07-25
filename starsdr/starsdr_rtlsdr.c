@@ -1,4 +1,5 @@
-// Copyright Scott Cutler
+// Copyright Outernet Inc,2016
+// based on SDRIO - Copyright Scott Cutler
 // This source file is licensed under the GNU Lesser General Public License (LGPL)
 
 #include <stdlib.h>
@@ -25,7 +26,7 @@ typedef struct starsdr_device_t
     void *callback_context;
     pthread_t tid;
 
-    starsdr_iq *samples;
+    starsdr_int16 *samples;
     starsdr_uint32 num_samples;
 
     starsdr_uint64 min_freq;
@@ -180,20 +181,17 @@ void rtlsdr_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
                 free(dev->samples);
             }
 
-            dev->samples = (starsdr_iq *)malloc(dev->num_samples * sizeof(starsdr_iq));
+            dev->samples = (starsdr_int16 *)malloc(dev->num_samples * sizeof(starsdr_int16) * 2);
         }
 
         if (dev->samples)
         {
-            starsdr_iqu8 *iqbuf = (starsdr_iqu8 *)buf;
             starsdr_uint32 i;
-            for (i=0; i<dev->num_samples; i++)
+            starsdr_int16 *samples;
+
+            for (i=0, samples=dev->samples; i< 2 * dev->num_samples; i++)
             {
-//                dev->samples[i].i = ((float)iqbuf[i].i - 127.5f) * 0.0078431373f;
-//                dev->samples[i].q = ((float)iqbuf[i].q - 127.5f) * 0.0078431373f;
-                // underlying code passes in uint8 samples. convery to signed int16
-                dev->samples[i].i = (starsdr_int16) iqbuf[i].i - 127;
-                dev->samples[i].q = (starsdr_int16) iqbuf[i].q - 127;
+		*(samples++) = (starsdr_int16) *(buf++) - 127;
             }
 
             dev->callback(dev->callback_context, dev->samples, dev->num_samples);
@@ -215,15 +213,15 @@ STARSDREXPORT void * start_rx_routine(void *ctx)
     return 0;
 }
 
-STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_size)
+STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_num_samples)
 {
-    // if buffer size not a multiple of 512
-    if (usb_buffer_size % 512)
+    // if buffer size not a multiple of 256
+    if (usb_buffer_num_samples % 256)
         return 0;
 
     // if passed-in size is 0, use DEFAULT size
-    if (usb_buffer_size > 0)
-        usb_bulk_buffer_size = usb_buffer_size;
+    if (usb_buffer_num_samples > 0)
+        usb_bulk_buffer_size = usb_buffer_num_samples * 2; // 1 complex sample = 2x uint8 values
     else
         usb_bulk_buffer_size = DEFAULT_USB_BULK_BUFFER_SIZE;
 

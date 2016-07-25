@@ -165,7 +165,7 @@ int mirisdr_set_soft (mirisdr_dev_t *p) {
     mirisdr_write_reg(p, 0x09, reg5);
     mirisdr_write_reg(p, 0x09, reg2);
 
-    fprintf(stderr, "freq: %.2f MHz (offset: %.2f MHz), n: %lu, fraction: %lu/%lu\n", ((double) n + (double) frac / (double) thresh) * 96.0 / (double) lo_div, (double) offset / 1.0e6, n, frac, thresh);
+    fprintf(stderr, "freq: %.2f MHz (offset: %.2f MHz), n: %llu, fraction: %llu/%llu\n", ((double) n + (double) frac / (double) thresh) * 96.0 / (double) lo_div, (double) offset / 1.0e6, n, frac, thresh);
 
     return 0;
 }

@@ -78,7 +78,7 @@ static int mirisdr_feed_async (mirisdr_dev_t *p, unsigned char *samples, uint32_
         }
     }
 
-done:
+//done:
     return 0;
 
 failed:

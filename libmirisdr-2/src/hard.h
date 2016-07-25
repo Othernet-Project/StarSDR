@@ -15,5 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define MIRISDR_SAMPLE_RATE_MIN         1300000
-#define MIRISDR_SAMPLE_RATE_MAX         15000000
+#define MIRISDR_SAMPLE_RATE_MIN         200000
+// limit SAMPLE RATE to maximum supported with 14-bit samples
+#define MIRISDR_SAMPLE_RATE_MAX         6048000

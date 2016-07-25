@@ -2,8 +2,8 @@
 all: starsdr_mirics starsdr_rtlsdr
 
 starsdr_mirics: starsdr_mirics.c starsdr_ext.h
-	$(CROSS_COMPILE)gcc -fPIC -shared -o ${OUTDIR}libstarsdr_mirics.so starsdr_mirics.c  -I. -L${DEPS} -lmirisdr
+	$(CROSS_COMPILE)gcc -Wall -fPIC -shared -o ${OUTDIR}libstarsdr_mirics.so starsdr_mirics.c  -I. -L${DEPS} -lmirisdr
 	
 starsdr_rtlsdr: starsdr_rtlsdr.c starsdr_ext.h
-	$(CROSS_COMPILE)gcc -fPIC -shared -o ${OUTDIR}libstarsdr_rtlsdr.so starsdr_rtlsdr.c  -I. -L${DEPS} -lrtlsdr
+	$(CROSS_COMPILE)gcc -Wall -fPIC -shared -o ${OUTDIR}libstarsdr_rtlsdr.so starsdr_rtlsdr.c  -I. -L${DEPS} -lrtlsdr
 

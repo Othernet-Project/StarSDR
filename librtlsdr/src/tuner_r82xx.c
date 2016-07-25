@@ -448,7 +448,7 @@ static int r82xx_set_pll(struct r82xx_priv *priv, uint32_t freq)
 		return rc;
 
 	/* set VCO current = 100 */
-	rc = r82xx_write_reg_mask(priv, 0x12, 0x80, 0xe0);
+	rc = r82xx_write_reg_mask(priv, 0x12, 0x00, 0xe0);
 	if (rc < 0)
 		return rc;
 
@@ -540,7 +540,7 @@ static int r82xx_set_pll(struct r82xx_priv *priv, uint32_t freq)
 
 		if (!i) {
 			/* Didn't lock. Increase VCO current */
-			rc = r82xx_write_reg_mask(priv, 0x12, 0x60, 0xe0);
+			rc = r82xx_write_reg_mask(priv, 0x12, 0x00, 0xe0);
 			if (rc < 0)
 				return rc;
 		}

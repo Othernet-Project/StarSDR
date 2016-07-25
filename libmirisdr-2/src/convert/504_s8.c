@@ -21,6 +21,6 @@ static int mirisdr_samples_convert_504_s8 (mirisdr_dev_t *p, unsigned char* src,
         p->addr+= 504;
     }
 
-no_data:
+//no_data:
     return ret;
 }

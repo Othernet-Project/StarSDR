@@ -54,6 +54,9 @@ int mirisdr_get_tuner_gains (mirisdr_dev_t *dev, int *gains) {
             gains[i] = i;
         }
     }
+    else {
+        i = 103;
+    }
 
     return i;
 }

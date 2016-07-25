@@ -1,4 +1,5 @@
-// Copyright Scott Cutler
+// Copyright Outernet Inc,2016
+// based on SDRIO - Copyright Scott Cutler
 // This source file is licensed under the GNU Lesser General Public License (LGPL)
 
 #include <stdlib.h>
@@ -26,7 +27,7 @@ typedef struct starsdr_device_t
     void *callback_context;
     pthread_t tid;
 
-    starsdr_iq *samples;
+    starsdr_int16 *samples;
     starsdr_uint32 num_samples;
 
     starsdr_uint64 min_freq;
@@ -164,22 +165,13 @@ void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
                 free(dev->samples);
             }
 
-            dev->samples = (starsdr_iq *)malloc(dev->num_samples * sizeof(starsdr_iq));
+            dev->samples = (starsdr_int16 *)malloc(dev->num_samples * sizeof(starsdr_int16) * 2);
         }
 
         if (dev->samples)
         {
-            starsdr_iqi16 *iqbuf = (starsdr_iqi16 *)buf;
-            starsdr_uint32 i;
-            for (i=0; i<dev->num_samples; i++)
-            {
-//                dev->samples[i].i = (float)iqbuf[i].i * 0.000030518509476f;
-//                dev->samples[i].q = (float)iqbuf[i].q * 0.000030518509476f;
-                  // the underlying code already converts the samples to +/- 2^15 (signed 16 bit).
-                  // TODO: remove copy and just pass back the underlying buffer as it is already in correct form
-                dev->samples[i].i = (starsdr_int16)iqbuf[i].i >> 2;
-                dev->samples[i].q = (starsdr_int16)iqbuf[i].q >> 2;
-            }
+
+            memcpy(dev->samples,buf,4 * dev->num_samples);
 
             dev->callback(dev->callback_context, dev->samples, dev->num_samples);
         }
@@ -200,16 +192,16 @@ STARSDREXPORT void * start_rx_routine(void *ctx)
     return 0;
 }
 
-STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_size)
+STARSDREXPORT starsdr_int32 starsdr_start_rx(starsdr_device *dev, starsdr_rx_async_callback callback, void *context, int usb_buffer_num_samples)
 {
 
     // if buffer size not a multiple of 512
-    if (usb_buffer_size % 512)
+    if (usb_buffer_num_samples % 256)
         return 0;
 
     // if passed-in size is 0, use DEFAULT size
-    if (usb_buffer_size > 0)
-        usb_bulk_buffer_size = usb_buffer_size;
+    if (usb_buffer_num_samples > 0)
+        usb_bulk_buffer_size = usb_buffer_num_samples * 4; // 1 complex sample = 2 x int16 values
     else
         usb_bulk_buffer_size = DEFAULT_USB_BULK_BUFFER_SIZE;
 
@@ -263,7 +255,7 @@ STARSDREXPORT starsdr_int64 starsdr_get_rx_frequency(starsdr_device *dev)
     }
 }
 
-static const starsdr_uint32 sample_rates[] = {3*512*1024, 2*1024*1024, 4*1024*1024, 23*256*1024, 123*64*1024, 35*256*1024, 23*512*1024};
+static const starsdr_uint32 sample_rates[] = {3*512*1024, 2*1024*1024, 4*1024*1024, 23*256*1024};
 
 STARSDREXPORT starsdr_int32 starsdr_get_num_samplerates(starsdr_device *dev)
 {
@@ -380,8 +372,7 @@ STARSDREXPORT starsdr_int32 starsdr_get_tuner_gain(starsdr_device *dev)
 
 STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_int32 *gains)
 {
-    // mirics doesn't have  gains table
-    return 0;
+    return (starsdr_int32) mirisdr_get_tuner_gains(dev->mirics_device, (int *) gains);
 }
 
 STARSDREXPORT starsdr_int32 starsdr_get_sample_bitsize(starsdr_device *dev)
