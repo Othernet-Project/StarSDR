@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "starsdr_ext.h"
 
@@ -420,10 +421,23 @@ STARSDREXPORT starsdr_int32 starsdr_get_tuner_gain(starsdr_device *dev)
 
 STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_int32 *gains)
 {
-    return (starsdr_int32) rtlsdr_get_tuner_gains(dev->rtl_device, (int *) gains);
+    starsdr_int32 i;
+    int num_gains;
+
+    num_gains = rtlsdr_get_tuner_gains(dev->rtl_device, (int *) gains);
+
+    if (gains) 
+    {
+        for (i=0; i<num_gains; i--)
+        {
+            gains[i] = (int)floor((gains[i]+5)/10.0);
+        }
+    }   
+    return (starsdr_int32) num_gains;
 }
 
 STARSDREXPORT starsdr_int32 starsdr_get_sample_bitsize(starsdr_device *dev)
 {
     return (starsdr_int32) 8;
 }
+
