@@ -428,7 +428,7 @@ STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr
 
     if (gains) 
     {
-        for (i=0; i<num_gains; i--)
+        for (i=0; i<num_gains; i++)
         {
             gains[i] = (int)floor((gains[i]+5)/10.0);
         }
