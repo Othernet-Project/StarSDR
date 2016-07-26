@@ -20,7 +20,7 @@
 int mirisdr_set_gain (mirisdr_dev_t *p) {
     uint32_t reg1 = 1, reg6 = 6;
 
-    fprintf(stderr, "gain baseband: %d, lna: %d, mixer: %d\n", p->gain_baseband, p->gain_lna, p->gain_mixer);
+    //fprintf(stderr, "gain baseband: %d, lna: %d, mixer: %d\n", p->gain_baseband, p->gain_lna, p->gain_mixer);
 
     /* Receiver Gain Control */
     /* 0-3 => registr */

@@ -56,7 +56,7 @@ typedef starsdr_int32 (*starsdr_get_num_devices_t)();
 typedef starsdr_device * (*starsdr_open_device_t)(starsdr_uint32 device_index);
 typedef starsdr_int32 (*starsdr_close_device_t)(starsdr_device *dev);
 
-typedef const char * (*starsdr_get_device_string_t)(starsdr_device *dev);
+typedef const char * (*starsdr_get_device_string_t)(starsdr_uint32 device_index);
 
 typedef starsdr_int32 (*starsdr_set_rx_samplerate_t)(starsdr_device *dev, starsdr_uint64 sample_rate);
 typedef starsdr_int32 (*starsdr_set_rx_frequency_t)(starsdr_device *dev, starsdr_uint64 frequency);
@@ -106,7 +106,7 @@ extern "C" {
     STARSDREXPORT starsdr_device * starsdr_open_device(starsdr_uint32 device_index);
     STARSDREXPORT starsdr_int32 starsdr_close_device(starsdr_device *dev);
 
-    STARSDREXPORT const char * starsdr_get_device_string(starsdr_device *dev);
+    STARSDREXPORT const char * starsdr_get_device_string(starsdr_uint32 device_index);
 
     STARSDREXPORT starsdr_int32 starsdr_set_rx_samplerate(starsdr_device *dev, starsdr_uint64 sample_rate);
     STARSDREXPORT starsdr_int32 starsdr_set_rx_frequency(starsdr_device *dev, starsdr_uint64 frequency);

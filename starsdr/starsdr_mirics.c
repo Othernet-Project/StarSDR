@@ -97,17 +97,9 @@ STARSDREXPORT starsdr_int32 starsdr_close_device(starsdr_device *dev)
     }
 }
 
-STARSDREXPORT const char * starsdr_get_device_string(starsdr_device *dev)
+STARSDREXPORT const char * starsdr_get_device_string(starsdr_uint32 device_index)
 {
-    if (dev)
-    {
-        return mirisdr_get_device_name(dev->device_index);
-    }
-    else
-    {
-        return 0;
-
-    }
+    return mirisdr_get_device_name(device_index);
 }
 
 STARSDREXPORT starsdr_int32 starsdr_set_rx_samplerate(starsdr_device *dev, starsdr_uint64 sample_rate)
