@@ -34,12 +34,6 @@ typedef struct starsdr_device_t
     starsdr_uint64 max_freq;
 } starsdr_device;
 
-typedef struct starsdr_iqu8_t
-{
-    starsdr_uint8 i;
-    starsdr_uint8 q;
-} starsdr_iqu8;
-
 // must be multiple of 512!
 #define DEFAULT_USB_BULK_BUFFER_SIZE ((128 * 512))
 static int usb_bulk_buffer_size = DEFAULT_USB_BULK_BUFFER_SIZE;
@@ -171,7 +165,7 @@ void rtlsdr_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 
     if (dev->callback)
     {
-        starsdr_uint32 num_samples = len / 2; // 2 bytes per sample
+        starsdr_uint32 num_samples = len / (sizeof(starsdr_uint8)*2) ; // 2 bytes per sample
 
         if (dev->num_samples != num_samples)
         {
@@ -413,24 +407,24 @@ STARSDREXPORT starsdr_int32 starsdr_get_caps(starsdr_device *dev, starsdr_caps c
 }
 
 
-STARSDREXPORT starsdr_int32 starsdr_get_tuner_gain(starsdr_device *dev)
+STARSDREXPORT starsdr_float32 starsdr_get_tuner_gain(starsdr_device *dev)
 {
-    return (starsdr_int32) rtlsdr_get_tuner_gain(dev->rtl_device);
+    return ((starsdr_float32) rtlsdr_get_tuner_gain(dev->rtl_device))/ 10.0f;
 }
 
 
-STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_int32 *gains)
+STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_float32 *gains)
 {
     starsdr_int32 i;
     int num_gains;
-
-    num_gains = rtlsdr_get_tuner_gains(dev->rtl_device, (int *) gains);
+    int *igains = (int *) gains;
+    num_gains = rtlsdr_get_tuner_gains(dev->rtl_device, igains);
 
     if (gains) 
     {
         for (i=0; i<num_gains; i++)
         {
-            gains[i] = (int)floor((gains[i]+5)/10.0);
+            gains[i] = ((starsdr_float32)(igains[i]))/10.0;
         }
     }   
     return (starsdr_int32) num_gains;

@@ -92,7 +92,7 @@ MIRISDR_API const char *mirisdr_get_transfer (mirisdr_dev_t *p);        /* extra
 
 /* gain */
 MIRISDR_API int mirisdr_set_gain (mirisdr_dev_t *p);                    /* extra */
-MIRISDR_API int mirisdr_get_tuner_gains (mirisdr_dev_t *dev, int *gains);
+MIRISDR_API int mirisdr_get_tuner_gains (mirisdr_dev_t *dev, float *gains);
 MIRISDR_API int mirisdr_set_tuner_gain (mirisdr_dev_t *p, int gain);
 MIRISDR_API int mirisdr_get_tuner_gain (mirisdr_dev_t *p);              /* extra */
 MIRISDR_API int mirisdr_set_tuner_gain_mode (mirisdr_dev_t *p, int mode);

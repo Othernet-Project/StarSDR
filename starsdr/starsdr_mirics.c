@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "starsdr_ext.h"
 
@@ -34,11 +35,6 @@ typedef struct starsdr_device_t
     starsdr_uint64 max_freq;
 } starsdr_device;
 
-typedef struct starsdr_iqi16_t
-{
-    starsdr_int16 i;
-    starsdr_int16 q;
-} starsdr_iqi16;
 
 // must be multiple of 512!
 #define DEFAULT_USB_BULK_BUFFER_SIZE ((128 * 512))
@@ -154,7 +150,7 @@ void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 
     if (dev->callback)
     {
-        starsdr_uint32 num_samples = len / sizeof(starsdr_iqi16); // 4 bytes per sample
+        starsdr_uint32 num_samples = len / (sizeof(starsdr_int16) * 2) ; // 4 bytes per sample
 
         if (dev->num_samples != num_samples)
         {
@@ -326,7 +322,7 @@ STARSDREXPORT starsdr_int32 starsdr_set_rx_gain(starsdr_device *dev, starsdr_flo
 {
     if (dev)
     {
-        return (mirisdr_set_tuner_gain(dev->mirics_device, (int)gain) == 0);
+        return (mirisdr_set_tuner_gain(dev->mirics_device, (int) floor(gain)) == 0);
     }
     else
     {
@@ -365,14 +361,14 @@ STARSDREXPORT starsdr_int32 starsdr_get_caps(starsdr_device *dev, starsdr_caps c
 }
 
 
-STARSDREXPORT starsdr_int32 starsdr_get_tuner_gain(starsdr_device *dev)
+STARSDREXPORT starsdr_float32 starsdr_get_tuner_gain(starsdr_device *dev)
 {
-    return (starsdr_int32) mirisdr_get_tuner_gain(dev->mirics_device);
+    return (starsdr_float32) mirisdr_get_tuner_gain(dev->mirics_device);
 }
 
-STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_int32 *gains)
+STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_float32 *gains)
 {
-    return (starsdr_int32) mirisdr_get_tuner_gains(dev->mirics_device, (int *) gains);
+    return (starsdr_int32) mirisdr_get_tuner_gains(dev->mirics_device, (float *) gains);
 }
 
 STARSDREXPORT starsdr_int32 starsdr_get_sample_bitsize(starsdr_device *dev)

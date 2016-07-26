@@ -89,9 +89,9 @@ typedef starsdr_int32 (*starsdr_set_tx_gain_t)(starsdr_device *dev, starsdr_floa
 typedef void        (*starsdr_get_tuning_range_t)(starsdr_device *dev, starsdr_uint64 *min, starsdr_uint64 *max);
 typedef starsdr_int32 (*starsdr_get_caps_t)(starsdr_device *dev, starsdr_caps caps);
 
-typedef starsdr_int32 (*starsdr_get_tuner_gain_t) (starsdr_device *dev);
+typedef starsdr_float32 (*starsdr_get_tuner_gain_t) (starsdr_device *dev);
 
-typedef starsdr_int32 (*starsdr_get_tuner_gains_t) (starsdr_device *dev, starsdr_int32 *gains);
+typedef starsdr_int32 (*starsdr_get_tuner_gains_t) (starsdr_device *dev, starsdr_float32 *gains);
 
 typedef starsdr_int32 (*starsdr_get_sample_bitsize_t) (starsdr_device *dev);
 
@@ -139,9 +139,9 @@ extern "C" {
     STARSDREXPORT void        starsdr_get_tuning_range(starsdr_device *dev, starsdr_uint64 *min, starsdr_uint64 *max);
     STARSDREXPORT starsdr_int32 starsdr_get_caps(starsdr_device *dev, starsdr_caps caps);
 
-    STARSDREXPORT starsdr_int32 starsdr_get_tuner_gain(starsdr_device *dev);
+    STARSDREXPORT starsdr_float32 starsdr_get_tuner_gain(starsdr_device *dev);
 
-    STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_int32 *gains);
+    STARSDREXPORT starsdr_int32 starsdr_get_tuner_gains(starsdr_device *dev, starsdr_float32 *gains);
 
     STARSDREXPORT starsdr_int32 starsdr_get_sample_bitsize(starsdr_device *dev);
 

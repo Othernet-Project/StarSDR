@@ -46,12 +46,12 @@ int mirisdr_set_gain (mirisdr_dev_t *p) {
     return 0;
 }
 
-int mirisdr_get_tuner_gains (mirisdr_dev_t *dev, int *gains) {
+int mirisdr_get_tuner_gains (mirisdr_dev_t *dev, float *gains) {
     int i;
 
     if (gains) {
         for (i = 0; i <= 102; i++) {
-            gains[i] = i;
+            gains[i] = (float) i;
         }
     }
     else {
