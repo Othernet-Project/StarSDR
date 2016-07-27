@@ -29,7 +29,7 @@ typedef struct starsdr_device_t
     pthread_t tid;
 
     starsdr_int16 *samples;
-    starsdr_uint32 num_samples;
+    starsdr_int32 num_samples;
 
     starsdr_uint64 min_freq;
     starsdr_uint64 max_freq;
@@ -142,7 +142,7 @@ void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 
     if (dev->callback)
     {
-        starsdr_uint32 num_samples = len / (sizeof(starsdr_int16) * 2) ; // 4 bytes per sample
+        starsdr_int32 num_samples = len / (sizeof(starsdr_int16) * 2) ; // 4 bytes per sample
 
         if (dev->num_samples != num_samples)
         {

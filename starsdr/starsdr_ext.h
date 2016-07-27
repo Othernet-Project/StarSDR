@@ -37,8 +37,8 @@ typedef enum
 } starsdr_caps;
 
 
-typedef starsdr_int32 (*starsdr_rx_async_callback)(void *context, starsdr_int16 *samples, starsdr_uint32 length);
-typedef starsdr_int32 (*starsdr_tx_async_callback)(void *context, starsdr_int16 *samples, starsdr_uint32 length);
+typedef starsdr_int32 (*starsdr_rx_async_callback)(void *context, starsdr_int16 *samples, starsdr_int32 num_samples);
+typedef starsdr_int32 (*starsdr_tx_async_callback)(void *context, starsdr_int16 *samples, starsdr_int32 num_samples);
 
 
 
