@@ -1,6 +1,6 @@
-export PREFIX="/home/abhishek/build/usr/bin/"
-export CROSS_COMPILE="${PREFIX}/arm-buildroot-linux-gnueabihf-"
-export OUTDIR="$PWD/out/"
+#PREFIX="/home/abhishek/build/usr/bin/"
+#CROSS_COMPILE="${PREFIX}/arm-buildroot-linux-gnueabihf-"
+OUTDIR="$PWD/out/"
 [ -d "$OUTDIR" ] || mkdir "$OUTDIR"
 
 LIBUSB_CFLAGS=$(${PREFIX}pkg-config libusb-1.0 --cflags)
@@ -19,11 +19,18 @@ ${CROSS_COMPILE}gcc -Wall -Wno-unused-function -Wno-unused-variable -O3 -fPIC -s
 popd
 
 # build starsdr
-export DEPS=$OUTDIR
+DEPS=$OUTDIR
 pushd starsdr
-make
+OUTDIR=${OUTDIR} make
 popd
 
 cp starsdr/starsdr_ext.h $OUTDIR
 
+pushd star_fm
+FILES="star_fm.c  convenience.c"
+[ -f ${OUTDIR}/libstarsdr.so ] && unlink ${OUTDIR}/libstarsdr.so
+ln -s ${OUTDIR}/libstarsdr_mirics.so ${OUTDIR}/libstarsdr.so
+#${CROSS_COMPILE}gcc -Wall -O3 -o ${OUTDIR}/star_fm -I../include ${LIBUSB_CFLAGS} ${FILES} -z muldefs ${LIBUSB_LFLAGS} -L${OUTDIR} -lpthread -lm -lstarsdr_mirics -lstarsdr_rtlsdr -lmirisdr -lrtlsdr
+${CROSS_COMPILE}gcc -Wall -O3 -o ${OUTDIR}/star_fm -I../include ${LIBUSB_CFLAGS} ${FILES} ${LIBUSB_LFLAGS} -L${OUTDIR} -lpthread -lm -lstarsdr -lmirisdr -lrtlsdr
+popd
 
