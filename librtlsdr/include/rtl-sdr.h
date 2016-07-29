@@ -389,6 +389,11 @@ RTLSDR_API void rtlsdr_set_gpio_output(rtlsdr_dev_t *dev, uint8_t gpio);
 
 RTLSDR_API void rtlsdr_set_gpio_input(rtlsdr_dev_t *dev, uint8_t gpio);
 
+/*!
+ * Enable or disable the bias tee on GPIO PIN 0.
+ */
+RTLSDR_API int rtlsdr_set_bias_tee(rtlsdr_dev_t *dev, int on);
+
 #ifdef __cplusplus
 }
 #endif
