@@ -563,15 +563,35 @@ void rtlsdr_set_gpio_bit(rtlsdr_dev_t *dev, uint8_t gpio, int val)
 	rtlsdr_write_reg(dev, SYSB, GPO, r, 1);
 }
 
+int rtlsdr_get_gpio_bit(rtlsdr_dev_t *dev, uint8_t gpio)
+{
+	uint16_t r;
+
+	gpio = 1 << gpio;
+	r = rtlsdr_read_reg(dev, SYSB, GPO, 1);
+	return (r >> gpio) | 0x01;
+}
+
 void rtlsdr_set_gpio_output(rtlsdr_dev_t *dev, uint8_t gpio)
 {
 	int r;
 	gpio = 1 << gpio;
 
 	r = rtlsdr_read_reg(dev, SYSB, GPD, 1);
-	rtlsdr_write_reg(dev, SYSB, GPO, r & ~gpio, 1);
+	rtlsdr_write_reg(dev, SYSB, GPD, r & ~gpio, 1);
 	r = rtlsdr_read_reg(dev, SYSB, GPOE, 1);
 	rtlsdr_write_reg(dev, SYSB, GPOE, r | gpio, 1);
+}
+
+void rtlsdr_set_gpio_input(rtlsdr_dev_t *dev, uint8_t gpio)
+{
+	int r;
+	gpio = 1 << gpio;
+
+	r = rtlsdr_read_reg(dev, SYSB, GPD, 1);
+	rtlsdr_write_reg(dev, SYSB, GPD, r | gpio, 1);
+	r = rtlsdr_read_reg(dev, SYSB, GPOE, 1);
+	rtlsdr_write_reg(dev, SYSB, GPOE, r & ~gpio, 1);
 }
 
 void rtlsdr_set_i2c_repeater(rtlsdr_dev_t *dev, int on)

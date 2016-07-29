@@ -380,6 +380,15 @@ RTLSDR_API int rtlsdr_read_async(rtlsdr_dev_t *dev,
  */
 RTLSDR_API int rtlsdr_cancel_async(rtlsdr_dev_t *dev);
 
+
+RTLSDR_API void rtlsdr_set_gpio_bit(rtlsdr_dev_t *dev, uint8_t gpio, int val);
+
+RTLSDR_API int rtlsdr_get_gpio_bit(rtlsdr_dev_t *dev, uint8_t gpio);
+
+RTLSDR_API void rtlsdr_set_gpio_output(rtlsdr_dev_t *dev, uint8_t gpio);
+
+RTLSDR_API void rtlsdr_set_gpio_input(rtlsdr_dev_t *dev, uint8_t gpio);
+
 #ifdef __cplusplus
 }
 #endif

@@ -793,10 +793,10 @@ starsdr_int32 starsdr_callback(void *ctx, starsdr_int16 *buf, starsdr_int32 num_
 		s->mute = 0;
 	}
 	if (!s->offset_tuning) {
-		rotate_90(buf, num_samples);}
+		rotate_90(buf, 2*num_samples);}
 
 	for (i=0; i<((int)num_samples*2); i++) {
-		s->buf16[i] = buf[i];
+		s->buf16[i] = buf[i]/128;
 	}
 
 	pthread_rwlock_wrlock(&d->rw);
@@ -860,7 +860,7 @@ static void optimal_settings(int freq, int rate)
 	struct dongle_state *d = &dongle;
 	struct demod_state *dm = &demod;
 	struct controller_state *cs = &controller;
-	dm->downsample = (1000000 / dm->rate_in) + 1;
+	dm->downsample = (1300000 / dm->rate_in) + 1;
 	if (dm->downsample_passes) {
 		dm->downsample_passes = (int)log2(dm->downsample) + 1;
 		dm->downsample = 1 << dm->downsample_passes;

@@ -27,6 +27,8 @@ static int mirisdr_samples_convert_252_s16 (mirisdr_dev_t *p, unsigned char* buf
             /* maximální rozsah */
             dst[ret + 0] = (src[j + 0]) | (src[j + 1] << 8);
             dst[ret + 1] = (src[j + 2]) | (src[j + 3] << 8);
+            //dst[ret + 0] = src[j + 1];
+            //dst[ret + 1] = src[j + 3];
         }
     }
 

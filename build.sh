@@ -26,6 +26,7 @@ popd
 
 cp starsdr/starsdr_ext.h $OUTDIR
 
+
 pushd star_fm
 FILES="star_fm.c  convenience.c"
 [ -f ${OUTDIR}/libstarsdr.so ] && unlink ${OUTDIR}/libstarsdr.so
