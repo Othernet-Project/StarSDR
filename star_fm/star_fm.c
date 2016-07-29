@@ -796,7 +796,7 @@ starsdr_int32 starsdr_callback(void *ctx, starsdr_int16 *buf, starsdr_int32 num_
 		rotate_90(buf, 2*num_samples);}
 
 	for (i=0; i<((int)num_samples*2); i++) {
-		s->buf16[i] = buf[i]/128;
+		s->buf16[i] = buf[i];
 	}
 
 	pthread_rwlock_wrlock(&d->rw);
