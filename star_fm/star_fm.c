@@ -70,7 +70,6 @@
 
 #include <math.h>
 #include <pthread.h>
-#include <libusb.h>
 
 #include "starsdr_ext.h"
 #include "convenience.h"
@@ -784,9 +783,9 @@ starsdr_int32 starsdr_callback(void *ctx, starsdr_int16 *buf, starsdr_int32 num_
 	struct demod_state *d = s->demod_target;
 
 	if (do_exit) {
-		return;}
+		return -1;}
 	if (!ctx) {
-		return;}
+		return -1;}
 	if (s->mute) {
 		for (i=0; i<s->mute; i++) {
 			buf[i] = 0;}
@@ -804,6 +803,7 @@ starsdr_int32 starsdr_callback(void *ctx, starsdr_int16 *buf, starsdr_int32 num_
 	d->lp_len = 2 * num_samples;
 	pthread_rwlock_unlock(&d->rw);
 	safe_cond_signal(&d->ready, &d->ready_m);
+	return 0;
 }
 
 static void *dongle_thread_fn(void *arg)
@@ -1044,7 +1044,7 @@ int main(int argc, char **argv)
 #endif
 	int r, opt;
 	int dev_given = 0;
-	int custom_ppm = 0;
+	//int custom_ppm = 0;
 	dongle_init(&dongle);
 	demod_init(&demod);
 	output_init(&output);
@@ -1097,7 +1097,7 @@ int main(int argc, char **argv)
 			break;
 		case 'p':
 			dongle.ppm_error = atoi(optarg);
-			custom_ppm = 1;
+			//custom_ppm = 1;
 			break;
 		case 'E':
 			if (strcmp("edge",  optarg) == 0) {
@@ -1262,7 +1262,8 @@ int main(int argc, char **argv)
 		fclose(output.file);}
 
 	starsdr_close_device(dongle.dev);
-	return r >= 0 ? r : -r;
+	//return r >= 0 ? r : -r;
+	return 0;
 }
 
 // vim: tabstop=8:softtabstop=8:shiftwidth=8:noexpandtab

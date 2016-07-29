@@ -69,9 +69,9 @@ STARSDREXPORT starsdr_device * starsdr_open_device(starsdr_uint32 device_index)
             mirisdr_set_sample_rate(dev->mirics_device, 2*1024*1000);
             mirisdr_set_center_freq(dev->mirics_device, 100000000);
             mirisdr_set_tuner_gain_mode(dev->mirics_device, 0);
-            mirisdr_set_if_freq(dev->mirics_device, 0);
-            mirisdr_set_bandwidth(dev->mirics_device, 8000000);
-            mirisdr_set_transfer(dev->mirics_device, "BULK");
+            //mirisdr_set_if_freq(dev->mirics_device, 0);
+            //mirisdr_set_bandwidth(dev->mirics_device, 8000000);
+            //mirisdr_set_transfer(dev->mirics_device, "BULK");
 
             dev->min_freq = 150000;
             dev->max_freq = 1900000000;

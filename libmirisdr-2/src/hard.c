@@ -16,6 +16,7 @@
  */
 
 #include "hard.h"
+#include <inttypes.h>
 
 /* nastavení parametrů které vyžadují restart */
 int mirisdr_set_hard (mirisdr_dev_t *p) {
@@ -98,7 +99,7 @@ int mirisdr_set_hard (mirisdr_dev_t *p) {
     n = vco / 48000000UL;
     fract = 0x200000UL * (vco % 48000000UL) / 48000000UL;
 
-    fprintf(stderr, "rate: %u, vco: %llu (%llu), n: %llu, fraction: %llu\n", p->rate, vco, (i / 2) - 1, n, fract);
+    fprintf(stderr, "rate: %u, vco: %" PRIu64 " (%" PRIu64 "), n: %" PRIu64 ", fraction: %" PRIu64 "\n", p->rate, vco, (i / 2) - 1, n, fract);
 
     /* nastavení vzorkovací frekvence */
     reg3|= (0x03 & 3) << 0; /* ?? */
