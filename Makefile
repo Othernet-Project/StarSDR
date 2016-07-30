@@ -1,3 +1,4 @@
+# example CROSS_COMPILE=arm-buildroot-linux-gnueabihf- 
 GCC_PATH=$(shell which $(CROSS_COMPILE)gcc)
 PKGCONFIG=$(shell dirname $(GCC_PATH))/pkg-config
 OUTDIR=$(PWD)/out/
@@ -35,4 +36,4 @@ star_fm:
 	DEPS=$(OUTDIR) CROSS_COMPILE=$(CROSS_COMPILE) make -C star_fm
 
 rtl_biast: librtlsdr/src/rtl_biast.c
-	$(CROSS_COMPILE)gcc -Wall -O3 -o rtl_biast -Ilibrtlsdr/include -I$(OUTDIR) $(LIBUSB_CFLAGS) $^ $(LIBUSB_LFLAGS) -L$(OUTDIR) -lrtlsdr
+	$(CROSS_COMPILE)gcc -Wall -O3 -o rtl_biast -Ilibrtlsdr/include -I$(OUTDIR)  $^  -L$(OUTDIR) -lrtlsdr
