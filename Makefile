@@ -5,7 +5,7 @@ OUTDIR=$(PWD)/out/
 LIBUSB_CFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --cflags)
 LIBUSB_LFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --libs)
 
-.PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm outdir
+.PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm outdir release
 
 libs: outdir libmirisdr librtlsdr starsdr
 
@@ -37,3 +37,9 @@ star_fm:
 
 rtl_biast: librtlsdr/src/rtl_biast.c
 	$(CROSS_COMPILE)gcc -Wall -O3 -o rtl_biast -Ilibrtlsdr/include -I$(OUTDIR)  $^  -L$(OUTDIR) -lrtlsdr
+
+release: libs
+	mv $(OUTDIR) starsdr_release_$(VER)
+	tar acf starsdr_release_$(VER).tgz starsdr_release_$(VER)
+	mv starsdr_release_$(VER).tgz starsdr_release_$(VER) ..
+
