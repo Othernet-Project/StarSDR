@@ -1225,6 +1225,7 @@ int main(int argc, char **argv)
 	}
 
 	//r = rtlsdr_set_testmode(dongle.dev, 1);
+	r = 0;
 
 	/* Reset endpoint before we start reading from it (mandatory) */
 	verbose_reset_buffer(dongle.dev);
