@@ -1,4 +1,4 @@
-# example CROSS_COMPILE=arm-buildroot-linux-gnueabihf- 
+# example CROSS_COMPILE=arm-buildroot-linux-gnueabihf- make libs
 GCC_PATH=$(shell which $(CROSS_COMPILE)gcc)
 PKGCONFIG=$(shell dirname $(GCC_PATH))/pkg-config
 OUTDIR=$(PWD)/out/
@@ -42,4 +42,5 @@ release: libs
 	mv $(OUTDIR) starsdr_release_$(VER)
 	tar acf starsdr_release_$(VER).tgz starsdr_release_$(VER)
 	mv starsdr_release_$(VER).tgz starsdr_release_$(VER) ..
+	echo Made starsdr_release_$(VER)
 
