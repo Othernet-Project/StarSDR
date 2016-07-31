@@ -25,10 +25,8 @@ static int mirisdr_samples_convert_252_s16 (mirisdr_dev_t *p, unsigned char* buf
         /* přeskočíme hlavičku 16 bitů, 252 I+Q párů */
         for (src+= 16, j = 0; j < 1008; j+= 4, ret+= 2) {
             /* maximální rozsah */
-            dst[ret + 0] = (src[j + 0]) | (src[j + 1] << 8);
-            dst[ret + 1] = (src[j + 2]) | (src[j + 3] << 8);
-            //dst[ret + 0] = src[j + 1];
-            //dst[ret + 1] = src[j + 3];
+            dst[ret + 0] = ((int16_t)(src[j + 0] << 2) | (src[j + 1] << 10)) >> 2;
+            dst[ret + 1] = ((int16_t)(src[j + 2] << 2) | (src[j + 3] << 10)) >> 2;
         }
     }
 

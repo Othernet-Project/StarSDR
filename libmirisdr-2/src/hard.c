@@ -143,7 +143,7 @@ failed:
 
 int mirisdr_set_sample_rate (mirisdr_dev_t *p, uint32_t rate) {
     p->rate = rate;
-
+/*
     int bandwidth[]={200000,300000,600000,1536000,5000000,6000000,7000000,8000000};
     int num_bandwidths = sizeof(bandwidth)/sizeof(bandwidth[0]);
     int i;
@@ -158,6 +158,8 @@ int mirisdr_set_sample_rate (mirisdr_dev_t *p, uint32_t rate) {
     }
     fprintf(stderr, "setting %d bandwidth\n",bw);
     mirisdr_set_bandwidth(p, bw);
+*/
+
     return mirisdr_set_hard(p);
 }
 

@@ -1,4 +1,5 @@
-# example CROSS_COMPILE=arm-buildroot-linux-gnueabihf- make libs
+# cross compile example:
+# CROSS_COMPILE=arm-buildroot-linux-gnueabihf- make libs
 GCC_PATH=$(shell which $(CROSS_COMPILE)gcc)
 PKGCONFIG=$(shell dirname $(GCC_PATH))/pkg-config
 OUTDIR=$(PWD)/out/
