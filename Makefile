@@ -23,21 +23,21 @@ outdir:
 	mkdir -p $(OUTDIR)
 
 libmirisdr: libmirisdr-2/src/libmirisdr.c
-	$(CROSS_COMPILE)gcc -Wall -O3 -fPIC -shared -o $(OUTDIR)libmirisdr.so -Ilibmirisdr-2/include $(LIBUSB_CFLAGS) $^ $(LIBUSB_LFLAGS)
+	$(CROSS_COMPILE)gcc -Wall -O3 -fPIC $(CFLAGS) -shared -o $(OUTDIR)libmirisdr.so -Ilibmirisdr-2/include $(LIBUSB_CFLAGS) $^ $(LIBUSB_LFLAGS)
 
 librtlsdr: $(addprefix librtlsdr/src/, librtlsdr.c tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
-	$(CROSS_COMPILE)gcc -Wall -Wno-unused-function -Wno-unused-variable -O3 -fPIC -shared -o $(OUTDIR)librtlsdr.so \
+	$(CROSS_COMPILE)gcc -Wall -Wno-unused-function -Wno-unused-variable -O3 -fPIC $(CFLAGS) -shared -o $(OUTDIR)librtlsdr.so \
 		-Ilibrtlsdr/include $(LIBUSB_CFLAGS) $^ $(LIBUSB_LFLAGS)
 
 starsdr:
-	OUTDIR=$(OUTDIR) DEPS=$(OUTDIR) CROSS_COMPILE=$(CROSS_COMPILE) make -C starsdr
+	OUTDIR=$(OUTDIR) DEPS=$(OUTDIR) CROSS_COMPILE=$(CROSS_COMPILE) CFLAGS=$(CFLAGS) make -C starsdr
 	cp starsdr/starsdr_ext.h $(OUTDIR)
 
 star_fm:
-	DEPS=$(OUTDIR) CROSS_COMPILE=$(CROSS_COMPILE) make -C star_fm
+	DEPS=$(OUTDIR) CROSS_COMPILE=$(CROSS_COMPILE) CFLAGS=$(CFLAGS) make -C star_fm
 
 rtl_biast: librtlsdr/src/rtl_biast.c
-	$(CROSS_COMPILE)gcc -Wall -O3 -o rtl_biast -Ilibrtlsdr/include -I$(OUTDIR)  $^  -L$(OUTDIR) -lrtlsdr
+	$(CROSS_COMPILE)gcc -Wall -O3 $(CFLAGS) -o rtl_biast -Ilibrtlsdr/include -I$(OUTDIR)  $^  -L$(OUTDIR) -lrtlsdr
 
 release: libs
 	mv $(OUTDIR) starsdr_release_$(VER)

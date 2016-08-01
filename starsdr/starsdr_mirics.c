@@ -69,8 +69,8 @@ STARSDREXPORT starsdr_device * starsdr_open_device(starsdr_uint32 device_index)
             mirisdr_set_sample_rate(dev->mirics_device, 2*1024*1000);
             mirisdr_set_center_freq(dev->mirics_device, 100000000);
             mirisdr_set_tuner_gain_mode(dev->mirics_device, 0);
-            mirisdr_set_if_freq(dev->mirics_device, 0);
-            mirisdr_set_bandwidth(dev->mirics_device, 8000000);
+            mirisdr_set_if_freq(dev->mirics_device, 200000);
+            //mirisdr_set_bandwidth(dev->mirics_device, 8000000);
             mirisdr_set_transfer(dev->mirics_device, "BULK");
 
             dev->min_freq = 150000;
@@ -139,9 +139,22 @@ STARSDREXPORT starsdr_int32 starsdr_set_tx_frequency(starsdr_device *dev, starsd
     return 0;
 }
 
+#ifdef DCFILTER
+int avg_I =0;
+int avg_Q =0;
+#endif
+
 void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 {
     starsdr_device *dev = (starsdr_device *)ctx;
+#ifdef DCFILTER
+    double local_avg_I = 0 ;
+    double local_avg_Q = 0;
+    int i;
+#endif
+    int16_t *b;
+
+    b = (int16_t *) buf;
 
     if (dev->callback)
     {
@@ -162,8 +175,19 @@ void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
         if (dev->samples)
         {
 
-            memcpy(dev->samples,buf,4 * dev->num_samples);
+#ifdef DCFILTER
+	    for(i=0;i<num_samples;i++) {
+		(dev->samples)[2*i] = b[2*i] - avg_I;
+		local_avg_I += b[2*i];
+		(dev->samples)[2*i+1] = b[2*i+1] - avg_Q;
+		local_avg_Q += b[2*i+1];
+	    }
 
+	    avg_I = (avg_I + (int)floor(local_avg_I/num_samples))/2;
+	    avg_Q = (avg_Q + (int)floor(local_avg_Q/num_samples))/2;
+#else
+            memcpy(dev->samples,buf,4 * dev->num_samples);
+#endif
             dev->callback(dev->callback_context, dev->samples, dev->num_samples);
         }
     }

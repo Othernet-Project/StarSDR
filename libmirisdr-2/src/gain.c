@@ -35,6 +35,9 @@ int mirisdr_set_gain (mirisdr_dev_t *p) {
     reg1|= p->gain_mixer << 12;
     reg1|= p->gain_lna << 13;
     reg1|= MIRISDR_DC_OFFSET_CALIBRATION_ONE_SHOT << 14;
+    //reg1|= MIRISDR_DC_OFFSET_CALIBRATION_PERIODIC3 << 14;
+    //reg1|= MIRISDR_DC_OFFSET_CALIBRATION_CONTINUOUS << 14;
+
     reg1|= MIRISDR_DC_OFFSET_CALIBRATION_SPEEDUP_OFF << 17;
     mirisdr_write_reg(p, 0x09, reg1);
 
