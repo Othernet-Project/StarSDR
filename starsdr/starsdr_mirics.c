@@ -18,6 +18,10 @@
 void usleep(unsigned long us) { Sleep(us / 1000); }
 #endif
 
+#ifdef GUI
+#include "display.c"
+#endif
+
 typedef struct starsdr_device_t
 {
     starsdr_uint32 device_index;
@@ -75,6 +79,10 @@ STARSDREXPORT starsdr_device * starsdr_open_device(starsdr_uint32 device_index)
 
             dev->min_freq = 150000;
             dev->max_freq = 1900000000;
+#ifdef GUI
+	    const_init(10, 512);
+#endif
+
         }
         else
         {
@@ -92,6 +100,9 @@ STARSDREXPORT starsdr_int32 starsdr_close_device(starsdr_device *dev)
     {
         int ret = mirisdr_close(dev->mirics_device);
         dev->mirics_device = 0;
+#ifdef GUI
+	const_close();
+#endif
         return (ret == 0);
     }
     else
@@ -144,17 +155,18 @@ int avg_I =0;
 int avg_Q =0;
 #endif
 
+
 void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 {
     starsdr_device *dev = (starsdr_device *)ctx;
 #ifdef DCFILTER
     double local_avg_I = 0 ;
     double local_avg_Q = 0;
+    int16_t *b;
+    b = (int16_t *) buf;
     int i;
 #endif
-    int16_t *b;
 
-    b = (int16_t *) buf;
 
     if (dev->callback)
     {
@@ -188,6 +200,12 @@ void mirics_read_async_cb(unsigned char *buf, uint32_t len, void *ctx)
 #else
             memcpy(dev->samples,buf,4 * dev->num_samples);
 #endif
+
+#ifdef GUI
+		const_plot(dev->samples, num_samples);
+#endif
+
+
             dev->callback(dev->callback_context, dev->samples, dev->num_samples);
         }
     }

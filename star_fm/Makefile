@@ -3,12 +3,16 @@
 
 all: star_fm
 
-star_fm: star_fm.c convenience.c convenience.h
+star_fm: star_fm.c convenience.c
 	rm -f ./libstarsdr.so
 	ln -s $(DEPS)libstarsdr_mirics.so ./libstarsdr.so
-	$(CROSS_COMPILE)gcc -Wall -O3 -o star_fm -I../include -I$(DEPS) star_fm.c convenience.c -Wl,--allow-shlib-undefined -L$(DEPS) -L. -lpthread -lm -lstarsdr
+	$(CROSS_COMPILE)gcc -Wall -O3 -o star_fm -I../include -I$(DEPS) $^ -Wl,--allow-shlib-undefined -L$(DEPS) -L. -lpthread -lm -lstarsdr
 	rm -f ./libstarsdr.so
 
+display: display.c
+	$(CROSS_COMPILE)gcc -Wall -O3 -Wno-unused-result -o display $^ -lX11
+
 clean:
-	rm star_fm
+	rm -f star_fm display
+
 
