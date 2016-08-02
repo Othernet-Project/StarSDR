@@ -91,6 +91,8 @@ static int *atan_lut = NULL;
 static int atan_lut_size = 131072; /* 512 KB */
 static int atan_lut_coef = 8;
 
+FILE* fd;
+
 struct dongle_state
 {
 	int      exit_flag;
@@ -791,6 +793,14 @@ starsdr_int32 starsdr_callback(void *ctx, starsdr_int16 *buf, starsdr_int32 num_
 			buf[i] = 0;}
 		s->mute = 0;
 	}
+
+	if (fd) {
+		for(i=0;i<num_samples;i+=2)
+			fprintf(fd,"[ %d, %d]\n",buf[2*i], buf[2*i+1]);
+		fprintf(stderr,"wrote %d samples to file\n", num_samples);
+	}
+	//fsync(fd);
+
 	if (!s->offset_tuning) {
 		rotate_90(buf, 2*num_samples);}
 
@@ -1050,7 +1060,7 @@ int main(int argc, char **argv)
 	output_init(&output);
 	controller_init(&controller);
 
-	while ((opt = getopt(argc, argv, "d:f:g:s:b:l:o:t:r:p:E:F:A:M:h")) != -1) {
+	while ((opt = getopt(argc, argv, "d:f:g:s:b:l:o:t:r:p:E:F:A:M:hw:")) != -1) {
 		switch (opt) {
 		case 'd':
 			//dongle.dev_index = verbose_device_search(optarg);
@@ -1146,7 +1156,8 @@ int main(int argc, char **argv)
 				demod.deemph = 1;
 				demod.squelch_level = 0;}
 			break;
-		case 'h':
+		case 'h': break;
+		case 'w': fd = fopen(optarg,"wt"); break;
 		default:
 			usage();
 			break;
@@ -1261,6 +1272,10 @@ int main(int argc, char **argv)
 
 	if (output.file != stdout) {
 		fclose(output.file);}
+
+	if(fd) {
+		fclose(fd);
+	}
 
 	starsdr_close_device(dongle.dev);
 	//return r >= 0 ? r : -r;
