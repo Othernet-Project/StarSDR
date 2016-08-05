@@ -6,7 +6,7 @@ all: star_fm
 star_fm: star_fm.c convenience.c
 	rm -f ./libstarsdr.so
 	ln -s $(DEPS)libstarsdr_mirics.so ./libstarsdr.so
-	$(CROSS_COMPILE)gcc -Wall -O3 -o star_fm -I../include -I$(DEPS) $^ -Wl,--allow-shlib-undefined -L$(DEPS) -L. -lpthread -lm -lstarsdr
+	$(CC) -Wall -O3 $(CFLAGS) -o star_fm -I../include -I$(DEPS) $^ -Wl,--allow-shlib-undefined $(LFLAGS) -L$(DEPS) -L. -lpthread -lm -lstarsdr
 	rm -f ./libstarsdr.so
 
 display: display.c
