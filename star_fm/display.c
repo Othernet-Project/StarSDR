@@ -1,12 +1,23 @@
-/* 
-	Remember to compile try:
-		1) gcc hi.c -o hi -lX11
-		2) gcc hi.c -I /usr/include/X11 -L /usr/X11/lib -lX11
-		3) gcc hi.c -I /where/ever -L /who/knows/where -l X11
+// parts (C) 2016 Outernet Inc
+// derived from code by Brian Hammond, 1996
 
-	Brian Hammond 2/9/96.    Feel free to do with this as you will!
+/*
+# (c) 2016 Outernet Inc
+# This file is part of StarSDR.
+
+# StarSDR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesseer General Public License as 
+# published by the Free Software Foundation, either version 3 of 
+# the License, or (at your option) any later version.
+
+# StarSDR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public 
+# License along with StarSDR.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 
 /* include the X library headers */
 #include <X11/Xlib.h>
