@@ -25,16 +25,33 @@
 CC ?=gcc
 CC_PATH=$(shell which $(CC))
 PKGCONFIG=$(shell dirname $(CC_PATH))/pkg-config
-OUTDIR=$(PWD)/out/
+OUTDIR=$(shell pwd)/out/
 LIBUSB_CFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --cflags)
 LIBUSB_LFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --libs)
+PREFIX := /usr/local
+SDRD = $(PREFIX)/sdr.d
+RTLDIR = $(SDRD)/starsdr-rtlsdr
+MIRDIR = $(SDRD)/starsdr-mirics
 
 
-.PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm outdir release
+.PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm \
+	outdir release some install uninstall
 
 libs: outdir libmirisdr librtlsdr starsdr
 
+some: libs rtl_biast
+
 all: libs star_fm rtl_biast
+
+install:
+	install -Dm755 {.,$(RTLDIR)}/rtl_biast
+	install -Dm755 {$(OUTDIR),$(RTLDIR)/}librtlsdr.so
+	install -Dm755 $(OUTDIR)libstarsdr_rtlsdr.so $(RTLDIR)/libstarsdr.so
+	install -Dm755 {$(OUTDIR),$(MIRDIR)/}libmirisdr.so
+	install -Dm755 $(OUTDIR)libstarsdr_mirics.so $(MIRDIR)/libstarsdr.so
+
+uninstall:
+	-rm -rf $(SDRD)
 
 clean:
 	rm -rf $(OUTDIR)
