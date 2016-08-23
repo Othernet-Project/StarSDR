@@ -53,6 +53,7 @@ install:
 
 uninstall:
 	-rm -rf $(SDRD)
+	-rm $(BINDIR)/rtl_biast
 
 clean:
 	rm -rf $(OUTDIR)
