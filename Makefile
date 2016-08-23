@@ -36,11 +36,11 @@ MIRDIR = $(SDRD)/starsdr-mirics
 
 
 .PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm \
-	outdir release some install uninstall
+	outdir release installables install uninstall
 
 libs: outdir libmirisdr librtlsdr starsdr
 
-some: libs rtl_biast
+installables: libs rtl_biast
 
 all: libs star_fm rtl_biast
 
