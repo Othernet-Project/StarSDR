@@ -28,7 +28,7 @@ PKGCONFIG=$(shell dirname $(CC_PATH))/pkg-config
 OUTDIR=$(shell pwd)/out/
 LIBUSB_CFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --cflags)
 LIBUSB_LFLAGS=$(shell $(PKGCONFIG) libusb-1.0 --libs)
-PREFIX := /usr/local
+PREFIX ?= /usr/local
 BINDIR = $(PREFIX)/bin
 SDRD = $(PREFIX)/sdr.d
 RTLDIR = $(SDRD)/starsdr-rtlsdr
@@ -45,10 +45,10 @@ installables: libs rtl_biast
 all: libs star_fm rtl_biast
 
 install:
-	install -Dm755 {.,$(BINDIR)}/rtl_biast
-	install -Dm755 {$(OUTDIR),$(RTLDIR)/}librtlsdr.so
+	install -Dm755 ./rtl_biast $(BINDIR)/rtl_biast
+	install -Dm755 $(OUTDIR)/librtlsdr.so $(RTLDIR)/librtlsdr.so
 	install -Dm755 $(OUTDIR)libstarsdr_rtlsdr.so $(RTLDIR)/libstarsdr.so
-	install -Dm755 {$(OUTDIR),$(MIRDIR)/}libmirisdr.so
+	install -Dm755 $(OUTDIR)/libmirisdr.so $(MIRDIR)/libmirisdr.so
 	install -Dm755 $(OUTDIR)libstarsdr_mirics.so $(MIRDIR)/libstarsdr.so
 
 uninstall:
