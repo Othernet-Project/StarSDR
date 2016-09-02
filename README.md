@@ -1,6 +1,6 @@
 # StarSDR - Utilities for SDRs
 
-# Installing the build dependencies
+## Installing the build dependencies
 
 To build StarSDR, build tools will need to be installed. On most distros, the
 build tools usually come as a single package/metapackage that are named
@@ -31,7 +31,7 @@ Opensuse:
 install the build tools, try searching online for ‘build-essential equivalent
 for *<your distro name here>*’.
 
-# Compiling and installing
+## Compiling and installing
 
 To compile and install, run the following commands:
 
