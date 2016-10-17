@@ -32,28 +32,32 @@ PREFIX ?= /usr/local
 BINDIR = $(PREFIX)/bin
 SDRD = $(PREFIX)/sdr.d
 RTLDIR = $(SDRD)/starsdr-rtlsdr
-MIRDIR = $(SDRD)/starsdr-mirics
+#MIRDIR = $(SDRD)/starsdr-mirics
 
 
 .PHONY: clean clean_all libs all libmirisdr librtlsdr starsdr rtl_fm star_fm \
 	outdir release installables install uninstall
 
 libs: outdir libmirisdr librtlsdr starsdr
+#libs: outdir libmirisdr librtlsdr starsdr
 
-installables: libs rtl_biast
+installables: libs rtl_biast rtl_rpcd
 
-all: libs star_fm rtl_biast
+all: libs star_fm rtl_biast rtl_rpcd
 
 install:
 	install -Dm755 ./rtl_biast $(BINDIR)/rtl_biast
+	install -Dm755 ./rtl_rpcd $(BINDIR)/rtl_rpcd
 	install -Dm755 $(OUTDIR)/librtlsdr.so $(RTLDIR)/librtlsdr.so
-	install -Dm755 $(OUTDIR)libstarsdr_rtlsdr.so $(RTLDIR)/libstarsdr.so
-	install -Dm755 $(OUTDIR)/libmirisdr.so $(MIRDIR)/libmirisdr.so
-	install -Dm755 $(OUTDIR)libstarsdr_mirics.so $(MIRDIR)/libstarsdr.so
+	#install -Dm755 $(OUTDIR)libstarsdr_rtlsdr.so $(RTLDIR)/libstarsdr.so
+	#install -Dm755 $(OUTDIR)/libmirisdr.so $(MIRDIR)/libmirisdr.so
+	#install -Dm755 $(OUTDIR)libstarsdr_mirics.so $(MIRDIR)/libstarsdr.so
 
 uninstall:
 	-rm -rf $(SDRD)
 	-rm $(BINDIR)/rtl_biast
+	-rm $(BINDIR)/rtl_rpcd
+
 
 clean:
 	rm -rf $(OUTDIR)
@@ -61,17 +65,21 @@ clean:
 clean_all: clean
 	make -C star_fm clean
 	rm -f rtl_biast
+	rm -f rtl_rpcd
 
-outdir: 
+outdir:
 	mkdir -p $(OUTDIR)
 
-libmirisdr: libmirisdr-2/src/libmirisdr.c
-	$(CC) -Wall -O3 -fPIC $(CFLAGS) $(LIBSDR_CFLAGS) -shared \
-		-o $(OUTDIR)libmirisdr.so -Ilibmirisdr-2/include $(LIBUSB_CFLAGS) $^ $(LFLAGS) $(LIBSDR_LFLAGS) $(LIBUSB_LFLAGS)
+#libmirisdr: libmirisdr-2/src/libmirisdr.c
+#	$(CC) -Wall -O3 -fPIC $(CFLAGS) $(LIBSDR_CFLAGS) -shared \
+#		-o $(OUTDIR)libmirisdr.so -Ilibmirisdr-2/include $(LIBUSB_CFLAGS) $^ $(LFLAGS) $(LIBSDR_LFLAGS) $(LIBUSB_LFLAGS)
 
-librtlsdr: $(addprefix librtlsdr/src/, librtlsdr.c tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
+librtlsdr: $(addprefix librtlsdr/src/, librtlsdr.c tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c rtlsdr_rpc_msg.c rtlsdr_rpc.c)
 	$(CC) -Wall -Wno-unused-function -Wno-unused-variable -O3 -fPIC $(CFLAGS) $(LIBSDR_CFLAGS) -shared -o $(OUTDIR)librtlsdr.so \
 		-Ilibrtlsdr/include $(LIBUSB_CFLAGS) $^ $(LFLAGS) $(LIBSDR_LFLAGS) $(LIBUSB_LFLAGS)
+
+rtl_rpcd: librtlsdr/src/rtl_rpcd.c
+	$(CC) -Wall -O3 $(CFLAGS) -o rtl_rpcd -Ilibrtlsdr/include -I$(OUTDIR)  $^  $(LFLAGS) -L$(OUTDIR) -lrtlsdr
 
 starsdr:
 	OUTDIR=$(OUTDIR) DEPS=$(OUTDIR) CC=$(CC) CFLAGS=$(CFLAGS) LFLAGS=$(LFLAGS) FLAGS=$(FLAGS) make -C starsdr

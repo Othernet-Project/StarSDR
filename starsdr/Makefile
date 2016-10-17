@@ -26,12 +26,16 @@ ifneq (,$(findstring DCFILTER,$(FLAGS)))
     CFLAGS += -DDCFILTER
 endif
 
-all: starsdr_mirics starsdr_rtlsdr
+#all: starsdr_mirics starsdr_rtlsdr
+#all: starsdr_rtlsdr
+all: starsdr
 
-starsdr_mirics: starsdr_mirics.c starsdr_ext.h
-	$(CC) -Wall -O3 -fPIC $(CFLAGS) -shared \
-		-o ${OUTDIR}libstarsdr_mirics.so starsdr_mirics.c  -I. $(LFLAGS) -L${DEPS} -lmirisdr
-	
-starsdr_rtlsdr: starsdr_rtlsdr.c starsdr_ext.h
-	$(CC) -Wall -O3 -fPIC $(CFLAGS) -shared -o ${OUTDIR}libstarsdr_rtlsdr.so starsdr_rtlsdr.c  -I. $(LFLAGS) -L${DEPS} -lrtlsdr
+#starsdr_mirics: starsdr_mirics.c starsdr_ext.h
+#	$(CC) -Wall -O3 -fPIC $(CFLAGS) -shared \
+#		-o ${OUTDIR}libstarsdr_mirics.so starsdr_mirics.c  -I. $(LFLAGS) -L${DEPS} -lmirisdr
 
+#starsdr_rtlsdr: starsdr_rtlsdr.c starsdr_ext.h
+#	$(CC) -Wall -O3 -fPIC $(CFLAGS) -shared -o ${OUTDIR}libstarsdr_rtlsdr.so starsdr_rtlsdr.c  -I. $(LFLAGS) -L${DEPS} -lrtlsdr
+
+starsdr: starsdr_rtlsdr.c rtlsdr_rpc.c rtlsdr_rpc_msg.c starsdr_ext.h
+	$(CC) -Wall -O6 -fPIC $(CFLAGS) -shared -I../include -o ${OUTDIR}libstarsdr.so starsdr_rtlsdr.c librtlsdr.c rtlsdr_rpc.c rtlsdr_rpc_msg.c
